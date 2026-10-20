@@ -1,0 +1,29 @@
+name: Watcher QA CI
+on:
+  workflow_dispatch:
+    inputs:
+      result:
+        description: Requested test result
+        required: true
+        default: success
+        type: choice
+        options: [success, failure]
+      delay:
+        description: Delay in seconds
+        default: '10'
+        type: string
+permissions:
+  contents: read
+jobs:
+  controlled-result:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Controlled CI result
+        env:
+          QA_DELAY: ${{ inputs.delay }}
+          QA_RESULT: ${{ inputs.result }}
+        run: |
+          echo "Command watcher CI fixture"
+          sleep "$QA_DELAY"
+          test "$QA_RESULT" = success
